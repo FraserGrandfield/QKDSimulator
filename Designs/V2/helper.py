@@ -1,10 +1,12 @@
 from email.mime import base
 import importlib
 from sre_parse import State
+from turtle import color
 import numpy as np
 import qit
 from Crypto.Random import random
 import math
+import matplotlib.pyplot as plt
 
 def equivalentState(state1, state2):
     return np.array_equal(state1.prob(), state2.prob())
@@ -37,3 +39,7 @@ def calcualteQBER(qberCheckAlice, qberCheckBob):
             wrong += 1
     return (wrong / totalQubits)
     
+def drawGraphQBER(distances, qbers, keySize):
+    plt.plot(distances, qbers)
+    plt.grid(True)
+    plt.savefig(str(keySize) + ".png")

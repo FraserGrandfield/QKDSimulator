@@ -9,6 +9,7 @@ def runBB84():
     distances = [20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300, 320, 340, 360, 380, 400]
 
     for keySize in keySizes:
+        qbers = []
         for distance in distances:
             #Alice generates random bits to be encoded
             alicesRawKey = helper.getRandomBits(keySize)
@@ -33,6 +34,8 @@ def runBB84():
             print("Key size: " + str(keySize) + " Distance: " + str(distance) + " QBER: " + str(qber))
             print("Length: " + str(len(secureKeyAlice)))
             print("Length: " + str(len(secureKeyBob)))
+            qbers.append(qber)
+        helper.drawGraphQBER(distances, qbers, keySize)
 
 if __name__ == '__main__':
     main()
