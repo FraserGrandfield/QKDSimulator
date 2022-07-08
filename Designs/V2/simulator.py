@@ -1,5 +1,5 @@
 import BB84_02
-import helper
+import helper_02
 import E91_02
 
 keySizes = [64, 128, 256, 512, 1024]
@@ -20,17 +20,17 @@ def runBB84():
         secureKeySizes = []
         for distance in distances:
             #Alice generates random bits to be encoded
-            alicesRawKey = helper.getRandomBits(keySize)
+            alicesRawKey = helper_02.getRandomBits(keySize)
             #Alice chooses which basis to use
-            aliceBases = helper.getRandomBits(keySize)
+            aliceBases = helper_02.getRandomBits(keySize)
             #Alice preparing qubits
             alicesEncodedKey = BB84_02.encodeKey(alicesRawKey, aliceBases)
             #Calcualte the error rate depedning on the distance
-            errorRate = helper.calculateErrorRate(distance)
+            errorRate = helper_02.calculateErrorRate(distance)
             #Add noise the the encoded key
-            sentEncodedKey = helper.addNoise(alicesEncodedKey, errorRate)
+            sentEncodedKey = helper_02.addNoise(alicesEncodedKey, errorRate)
             #Bob prepares random basis
-            bobsBases = helper.getRandomBits(keySize)
+            bobsBases = helper_02.getRandomBits(keySize)
             #Bob measures the qubits sent by Alice
             bobsRawKey = BB84_02.measureQubits(sentEncodedKey, bobsBases)
             #Alice sends bob their bases so they can discared basis they chose differently
@@ -38,14 +38,14 @@ def runBB84():
             #Alice chooses random k/2 qubits to check the QBER
             qberCheckAlice, qberCheckBob, secureKeyAlice, secureKeyBob = BB84_02.checkKeys(keyAlice, keyBob)
             #Calcualte QBER
-            qber = helper.calcualteQBER(qberCheckAlice, qberCheckBob)
+            qber = helper_02.calcualteQBER(qberCheckAlice, qberCheckBob)
             secureKey = BB84_02.errorCorrection(secureKeyAlice, secureKeyBob)
             print("Key size: " + str(keySize) + " Distance: " + str(distance) + " QBER: " + str(qber))
             print("Length: " + str(len(secureKey)))
             qbers.append(qber)
             secureKeySizes.append(len(secureKey))
-        helper.drawGraph(distances, secureKeySizes, keySize, "SecureKey_BB84_")
-        helper.drawGraph(distances, qbers, keySize, "QBER_BB84_")
+        helper_02.drawGraph(distances, secureKeySizes, keySize, "SecureKey_BB84_")
+        helper_02.drawGraph(distances, qbers, keySize, "QBER_BB84_")
         measurmentsBB84QBER.append(qbers)
 
 def runE91():
@@ -64,14 +64,14 @@ def runE91():
             secureKey = E91_02.errorCorrection(rawKeyAliceNoise, rawKeyBob)
             secureKeySizes.append(len(secureKey))
             print("length of secure key: " + str(len(secureKey)))
-        helper.drawGraph(distances, secureKeySizes, keySize, "SecureKey_E91_")
-        helper.drawGraph(distances, qbers, keySize, "QBER_E91_")
+        helper_02.drawGraph(distances, secureKeySizes, keySize, "SecureKey_E91_")
+        helper_02.drawGraph(distances, qbers, keySize, "QBER_E91_")
         measurmentsE91QBER.append(qbers)
 
 def analysis():
     keySizeCounter = 0
     for i in range(len(measurmentsBB84QBER)):
-        helper.drawComparisonGraphQBER(distances, measurmentsE91QBER[i], measurmentsBB84QBER[i], keySizeCounter, "QBER_comparison_")
+        helper_02.drawComparisonGraphQBER(distances, measurmentsE91QBER[i], measurmentsBB84QBER[i], keySizeCounter, "QBER_comparison_")
         keySizeCounter += 1
         if keySizeCounter > 8:
             keySizeCounter = 0

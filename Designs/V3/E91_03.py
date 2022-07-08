@@ -5,7 +5,6 @@ import qit
 import numpy.random as npr
 from math import pi
 from numpy import *
-import helper_02
 
 def chooseBasis(keySize):
     choicesAlice = [0, pi/8, pi/4]
@@ -73,24 +72,12 @@ def calcualteQBER(secureAliceKey, secureBobKey):
         return((wrong / len(secureAliceKey)) * 100)
     return(0)
 
-def equivalentState(state1, state2):
-    return np.array_equal(state1.prob(), state2.prob())
+def calculateErrorRate(distance):
+    errorRate = (distance * distance) / (1500 * 1500) 
+    return (errorRate)
 
-def addNoise(state, distance):
-    errorRate = helper.calculateErrorRate(distance)
-    identityOp = array([[1,0],[0,1]])
-    p = np.random.random_sample()
-    if p < errorRate:
-        choices = [0, pi/8, pi/4]
-        choice = choices[npr.randint(0, 3)]
-        rotation = qit.utils.R_nmr(choice, np.pi/2)
-        rotation = kron(rotation, identityOp)
-        p, res, collapsedState = state.u_propagate(rotation).measure((0,), do = 'C')
-        return collapsedState
-    return state
-
-def addNoiseV2(key, distance):
-    errorRate = helper.calculateErrorRate(distance)
+def addNoise(key, distance):
+    errorRate = calculateErrorRate(distance)
     keyOut = []
     for qubit in key:
         p = np.random.random_sample()
