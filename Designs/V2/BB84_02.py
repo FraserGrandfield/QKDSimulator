@@ -1,6 +1,3 @@
-from email.mime import base
-import importlib
-from sre_parse import State
 import numpy as np
 import qit
 from Crypto.Random import random
@@ -37,7 +34,7 @@ def checkKeys(keyAlice, keyBob):
     chosenQubits = []
     secureKeyBob = []
     secureKeyAlice = []
-    while len(chosenQubits) < len(keyAlice) / 2:
+    while len(chosenQubits) < len(keyAlice) / 5:
         qubit = random.randint(0, len(keyAlice) - 1)
         if qubit not in chosenQubits:
             chosenQubits.append(qubit)
@@ -51,3 +48,10 @@ def checkKeys(keyAlice, keyBob):
             secureKeyAlice.append(bool(keyAlice[i].measure()))
             secureKeyBob.append(keyBob[i])
     return qberCheckAlice, qberCheckBob, secureKeyAlice, secureKeyBob
+
+def errorCorrection(secureKeyAlice, secureKeyBob):
+    finalSecureKey = []
+    for i in range(len(secureKeyAlice)):
+        if secureKeyAlice[i] == secureKeyBob[i]:
+            finalSecureKey.append(secureKeyAlice[i])
+    return finalSecureKey

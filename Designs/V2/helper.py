@@ -18,7 +18,8 @@ def getRandomBits(numberOfBits):
     return bits
 
 def calculateErrorRate(distance):
-    return (math.sqrt(distance) / 100)
+    errorRate = (distance * distance) / (1500 * 1500) 
+    return (errorRate)
 
 def addNoise(encodedKey, errorRate):
     sentEncodedKey = encodedKey.copy()
@@ -34,12 +35,22 @@ def addNoise(encodedKey, errorRate):
 def calcualteQBER(qberCheckAlice, qberCheckBob):
     wrong = 0
     totalQubits = len(qberCheckAlice)
+    if totalQubits < 1:
+        return 0
     for i in range(totalQubits):
         if not bool(qberCheckAlice[i].measure()[1]) == qberCheckBob[i]:
             wrong += 1
-    return (wrong / totalQubits)
+    return ((wrong / totalQubits) * 100)
     
-def drawGraphQBER(distances, qbers, keySize):
-    plt.plot(distances, qbers)
+def drawGraph(x, y, keySize, type):
+    plt.clf()
+    plt.plot(x, y)
     plt.grid(True)
-    plt.savefig(str(keySize) + ".png")
+    plt.savefig(type + str(keySize) + ".png")
+
+def drawComparisonGraphQBER(distances, e91Qbers, bb84Qbers, keySize, type):
+    plt.clf()
+    plt.plot(distances, e91Qbers)
+    plt.plot(distances, bb84Qbers)
+    plt.grid(True)
+    plt.savefig(type + str(keySize) + ".png")
