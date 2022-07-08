@@ -77,7 +77,7 @@ def equivalentState(state1, state2):
     return np.array_equal(state1.prob(), state2.prob())
 
 def addNoise(state, distance):
-    errorRate = helper.calculateErrorRate(distance)
+    errorRate = helper_02.calculateErrorRate(distance)
     identityOp = array([[1,0],[0,1]])
     p = np.random.random_sample()
     if p < errorRate:
@@ -90,7 +90,7 @@ def addNoise(state, distance):
     return state
 
 def addNoiseV2(key, distance):
-    errorRate = helper.calculateErrorRate(distance)
+    errorRate = helper_02.calculateErrorRate(distance)
     keyOut = []
     for qubit in key:
         p = np.random.random_sample()
