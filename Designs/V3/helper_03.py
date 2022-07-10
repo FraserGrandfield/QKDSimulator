@@ -20,3 +20,12 @@ def drawComparisonGraphQBER(distances, e91Qbers, bb84Qbers, keySize, type):
     plt.plot(distances, bb84Qbers)
     plt.grid(True)
     plt.savefig(type + str(keySize) + ".png")
+
+def saveMeasurement(dic, measurments, key):
+    if key in dic.keys():
+        for i in range(len(measurments)):
+            dic[key][i] = dic[key][i] + measurments[i]
+    else:
+        dic[key] = []
+        for i in range(len(measurments)): 
+            dic[key].append(measurments[i])
