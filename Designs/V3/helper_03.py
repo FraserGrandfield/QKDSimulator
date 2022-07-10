@@ -16,8 +16,10 @@ def drawGraph(x, y, keySize, type):
 
 def drawComparisonGraphQBER(distances, e91Qbers, bb84Qbers, keySize, type):
     plt.clf()
-    plt.plot(distances, e91Qbers)
-    plt.plot(distances, bb84Qbers)
+    plt.plot(distances, e91Qbers, label="E91")
+    plt.plot(distances, bb84Qbers, label="BB84")
+    plt.xlabel("Distance (M)")
+    plt.ylabel("QBER (%)")
     plt.grid(True)
     plt.savefig(type + str(keySize) + ".png")
 
