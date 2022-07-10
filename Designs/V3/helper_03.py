@@ -7,7 +7,7 @@ import qit
 from Crypto.Random import random
 import math
 import matplotlib.pyplot as plt
-    
+
 def drawGraph(x, y, keySize, type):
     plt.clf()
     plt.plot(x, y)

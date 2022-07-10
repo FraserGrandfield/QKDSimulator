@@ -1,15 +1,25 @@
+import argparse
 import BB84_03
 import helper_03
 import E91_03
 
-keySizes = [64, 128, 256, 512, 1024]
+keySizes = []
 
 distances = []
 measurmentsBB84QBER = []
 measurmentsE91QBER = []
 
 def main():
+
+    parser = argparse.ArgumentParser(description="QKD simulator")
+    parser.add_argument("-v", "--verbose", help="Print verbose", action="store_true")
+    parser.add_argument("-d", "--distance", help="Max distance to inciment up too", type=int, default=2000)
+    parser.add_argument("-ks", "--keySizes", help="Space seperated list of key sizes to simulate", nargs="+", type=int, default=[128, 256])
+    global args
+    args = parser.parse_args()
+
     createDistances()
+    addKeys()
     runBB84()
     runE91()
     analysis()
@@ -77,8 +87,12 @@ def analysis():
             keySizeCounter = 0
 
 def createDistances():
-    for i in range(20, 1500, 20):
+    for i in range(20, args.distance, 20):
         distances.append(i)
+
+def addKeys():
+    for key in args.keySizes:
+        keySizes.append(key)
 
 if __name__ == '__main__':
     main()
