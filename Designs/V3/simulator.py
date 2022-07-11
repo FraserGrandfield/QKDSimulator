@@ -14,7 +14,7 @@ def main():
 
     parser = argparse.ArgumentParser(description="QKD simulator")
     parser.add_argument("-v", "--verbose", help="Print verbose", action="store_true")
-    parser.add_argument("-d", "--distance", help="Max distance to inciment up too", type=int, default=2000)
+    parser.add_argument("-d", "--distance", help="Max distance to inciment up too", type=int, default=1500)
     parser.add_argument("-ks", "--keySizes", help="Space seperated list of key sizes to simulate", nargs="+", type=int, default=[128, 256])
     parser.add_argument("-rt", "--runTimes", help="How many times to run the simulator to get an average", type=int, default=1)
     global args
@@ -56,8 +56,8 @@ def runBB84():
             #Calcualte QBER
             qber = BB84_03.calcualteQBER(qberCheckAlice, qberCheckBob)
             secureKey = BB84_03.errorCorrection(secureKeyAlice, secureKeyBob)
-            print("Key size: " + str(keySize) + " Distance: " + str(distance) + " QBER: " + str(qber))
-            print("Length: " + str(len(secureKey)))
+            #print("Key size: " + str(keySize) + " Distance: " + str(distance) + " QBER: " + str(qber))
+            #print("Length: " + str(len(secureKey)))
             qbers.append(qber)
             rawKeySizes.append(len(siftedRawKeyAlice))
             secureKeySizes.append(len(secureKey))
@@ -83,7 +83,7 @@ def runE91():
             secureKey = E91_03.errorCorrection(rawKeyAliceNoise, rawKeyBob)
             rawKeySizes.append(len(rawKeyAlice) + len(checkKeyAlice))
             secureKeySizes.append(len(secureKey))
-            print("length of secure key: " + str(len(secureKey)))
+            #print("length of secure key: " + str(len(secureKey)))
         dictString = "E91_" + str(keySize)
         helper_03.saveMeasurement(qberDict, qbers, dictString)
         helper_03.saveMeasurement(rawKeySizesDict, rawKeySizes, dictString)

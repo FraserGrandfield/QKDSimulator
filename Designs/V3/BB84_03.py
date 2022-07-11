@@ -66,7 +66,13 @@ def getRandomBits(numberOfBits):
     return bits
 
 def calculateErrorRate(distance):
-    errorRate = (distance * distance) / (1500 * 1500) 
+    #Loss due to distance
+    errorRate = 0.02 * (distance / 30)
+    #Loss due to connectors
+    errorRate += 0.11 * 2
+    #Loss due to dark count
+    errorRate += 0.07
+    print(errorRate)
     return (errorRate)
 
 def addNoise(encodedKey, errorRate):
