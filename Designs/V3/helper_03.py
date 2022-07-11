@@ -32,3 +32,7 @@ def saveMeasurement(dic, measurments, key):
         dic[key] = []
         for i in range(len(measurments)): 
             dic[key].append(measurments[i])
+
+def calcualateStatusStep(noOfKeys, noOfRunTimes):
+    total = noOfKeys * noOfRunTimes * 2
+    return (100 / total)

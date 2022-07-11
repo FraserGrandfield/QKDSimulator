@@ -72,7 +72,6 @@ def calculateErrorRate(distance):
     errorRate += 0.11 * 2
     #Loss due to dark count
     errorRate += 0.07
-    print(errorRate)
     return (errorRate)
 
 def addNoise(encodedKey, errorRate):

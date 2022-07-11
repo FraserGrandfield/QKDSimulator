@@ -79,7 +79,6 @@ def calculateErrorRate(distance):
     errorRate += 0.11 * 2
     #Loss due to dark count
     errorRate += 0.30
-    print(errorRate)
     return (errorRate)
 
 def addNoise(key, distance):
@@ -99,6 +98,6 @@ def addNoise(key, distance):
 def errorCorrection(rawKeyAlice, rawKeyBob):
     secureKey = []
     for i in range(len(rawKeyAlice)):
-        if not rawKeyAlice == rawKeyBob:
+        if not rawKeyAlice[i] == rawKeyBob[i]:
             secureKey.append(rawKeyAlice[i])
     return secureKey

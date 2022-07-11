@@ -4,15 +4,21 @@ import BB84_03
 import helper_03
 import E91_03
 
+#Store the key sizes to simulate
 keySizes = []
+#Store the distances to simulate
 distances = []
-
+#Dictionaries to store measurements
 qberDict = {}
 rawKeySizesDict = {}
 secureKeySizesDict = {}
 
+#Main function
 def main():
-
+    #Current % of simulation complete
+    status = 0
+    statusStep = 0
+    #Argument parser that takes the distances, keysizes and how many times to run the simulator
     parser = argparse.ArgumentParser(description="QKD simulator")
     parser.add_argument("-v", "--verbose", help="Print verbose", action="store_true")
     parser.add_argument("-d", "--distance", help="Max distance to inciment up too", type=int, default=1500)
@@ -20,18 +26,22 @@ def main():
     parser.add_argument("-rt", "--runTimes", help="How many times to run the simulator to get an average", type=int, default=1)
     global args
     args = parser.parse_args()
-
+    
     createDistances()
     addKeys()
+    statusStep = helper_03.calcualateStatusStep(len(keySizes), args.runTimes)
+    #Run the simulation n amount of times
     for i in range(args.runTimes):
-        runBB84()
-        runE91()
+        status = runBB84(status, statusStep)
+        status = runE91(status, statusStep)
+    #Create graphs from results
     analysisQBER()
     analysisLogQBER()
     analysisRawKey()
     analysisSecureKey()
+    print("Simulation complete")
 
-def runBB84():
+def runBB84(status, statusStep):
     for keySize in keySizes:
         qbers = []
         rawKeySizes = []
@@ -67,8 +77,11 @@ def runBB84():
         helper_03.saveMeasurement(qberDict, qbers, dictString)
         helper_03.saveMeasurement(rawKeySizesDict, rawKeySizes, dictString)
         helper_03.saveMeasurement(secureKeySizesDict, secureKeySizes, dictString)
+        status = status + statusStep
+        print("Status: " + str(int(status)) + "%")
+    return status
 
-def runE91():
+def runE91(status, statusStep):
     for keySize in keySizes:
         qbers = []
         rawKeySizes = []
@@ -90,6 +103,9 @@ def runE91():
         helper_03.saveMeasurement(qberDict, qbers, dictString)
         helper_03.saveMeasurement(rawKeySizesDict, rawKeySizes, dictString)
         helper_03.saveMeasurement(secureKeySizesDict, secureKeySizes, dictString)
+        status = status + statusStep
+        print("Status: " + str(status) + "%")
+    return status
 
 def analysisQBER():
     for keySize in keySizes:
