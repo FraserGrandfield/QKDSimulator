@@ -14,13 +14,14 @@ def drawGraph(x, y, keySize, type):
     plt.grid(True)
     plt.savefig(type + str(keySize) + ".png")
 
-def drawComparisonGraphQBER(distances, e91Qbers, bb84Qbers, keySize, type):
+def drawComparisonGraph(distances, e91Measurements, bb84Measurements, keySize, type, xAxis, yAxis):
     plt.clf()
-    plt.plot(distances, e91Qbers, label="E91")
-    plt.plot(distances, bb84Qbers, label="BB84")
-    plt.xlabel("Distance (M)")
-    plt.ylabel("QBER (%)")
+    plt.plot(distances, e91Measurements, label="E91")
+    plt.plot(distances, bb84Measurements, label="BB84")
+    plt.xlabel(xAxis)
+    plt.ylabel(yAxis)
     plt.grid(True)
+    plt.legend()
     plt.savefig(type + str(keySize) + ".png")
 
 def saveMeasurement(dic, measurments, key):
