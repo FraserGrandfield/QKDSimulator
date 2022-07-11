@@ -9,8 +9,11 @@ def encodeKey(rawKey, bases):
         q = qit.state.State('0')
         if rawKey[i]:
             q = q.u_propagate(qit.sx)
+            
         if bases[i]:
+
             q = q.u_propagate(qit.H)
+            print(q)
         encodedKey.append(q)
     return encodedKey
 
@@ -34,7 +37,7 @@ def checkKeys(keyAlice, keyBob):
     chosenQubits = []
     secureKeyBob = []
     secureKeyAlice = []
-    while len(chosenQubits) < len(keyAlice) / 5:
+    while len(chosenQubits) < len(keyAlice) / 2:
         qubit = random.randint(0, len(keyAlice) - 1)
         if qubit not in chosenQubits:
             chosenQubits.append(qubit)
@@ -79,7 +82,7 @@ def addNoise(encodedKey, errorRate):
     for i in range(len(sentEncodedKey)):
         p = np.random.random_sample()
         if p < errorRate:
-            if equivalentState(encodedKey[i], qit.state.State('0')) or equivalentState(sentEncodedKey[i], qit.state.State('1')):
+            if equivalentState(sentEncodedKey[i], qit.state.State('0')) or equivalentState(sentEncodedKey[i], qit.state.State('1')):
                 sentEncodedKey[i] = sentEncodedKey[i].u_propagate(qit.sx)
             else:
                 sentEncodedKey[i] = sentEncodedKey[i].u_propagate(qit.sz)

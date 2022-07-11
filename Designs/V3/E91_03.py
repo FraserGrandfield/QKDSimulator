@@ -47,7 +47,7 @@ def measure(aliceRotations, bobRotations, aliceChoices, bobChoices):
     secureKeyBob = []
     checkKeyAlice = []
     checkKeybob = []
-    while len(chosenIndex) < len(secureKeyAliceTemp) /5:
+    while len(chosenIndex) < len(secureKeyAliceTemp) / 2:
         if len(secureKeyAliceTemp) > 1:
             qubit = random.randint(0, len(secureKeyAliceTemp) - 1)
             if qubit not in chosenIndex:
