@@ -6,6 +6,7 @@ import numpy.random as npr
 from math import pi
 from numpy import *
 
+#Alice and bob both randomly choose basis.
 def chooseBasis(keySize):
     choicesAlice = [0, pi/8, pi/4]
     choicesBob = [0, pi/8, -pi/8]
@@ -18,6 +19,7 @@ def chooseBasis(keySize):
         bobBasis.append(choicesBob[bobChoices[i]])
     return aliceBasis, bobBasis, aliceChoices, bobChoices
 
+#Alice prepares their basis
 def prepareBasis(basis):
     identityOp = array([[1,0],[0,1]])
     rotations = []
@@ -27,6 +29,7 @@ def prepareBasis(basis):
         rotations.append(rotation)
     return rotations
 
+#Alice and Bob measure the entangled particles to get their raw key and key to check qber
 def measure(aliceRotations, bobRotations, aliceChoices, bobChoices):
     secureKeyAliceTemp = []
     secureKeyBobTemp = []
@@ -41,7 +44,6 @@ def measure(aliceRotations, bobRotations, aliceChoices, bobChoices):
         
         if (aliceChoices[i] == 1 & bobChoices[i] == 0) | (aliceChoices[i] == 2 & bobChoices[i] == 2):
             secureKeyBobTemp.append(bobRes)
-    
     chosenIndex = []
     secureKeyAlice = []
     secureKeyBob = []
@@ -63,6 +65,7 @@ def measure(aliceRotations, bobRotations, aliceChoices, bobChoices):
             secureKeyBob.append(secureKeyBobTemp[i])
     return secureKeyAlice, secureKeyBob, checkKeyAlice, checkKeybob
 
+#Calculate QBER
 def calcualteQBER(secureAliceKey, secureBobKey):
     wrong = 0
     for i in range(len(secureAliceKey)):
@@ -72,6 +75,7 @@ def calcualteQBER(secureAliceKey, secureBobKey):
         return((wrong / len(secureAliceKey)) * 100)
     return(0)
 
+#Calcualte the error rate depedning on the distance
 def calculateErrorRate(distance):
     #Loss due to distance
     errorRate = 0.02 * (distance / 30)
@@ -81,6 +85,7 @@ def calculateErrorRate(distance):
     errorRate += 0.30
     return (errorRate)
 
+#Simulate adding noise to keys
 def addNoise(key, distance):
     errorRate = calculateErrorRate(distance)
     keyOut = []
@@ -95,6 +100,7 @@ def addNoise(key, distance):
             keyOut.append(qubit)
     return keyOut
 
+#Perform error correction so they both have the same secure key
 def errorCorrection(rawKeyAlice, rawKeyBob):
     secureKey = []
     for i in range(len(rawKeyAlice)):

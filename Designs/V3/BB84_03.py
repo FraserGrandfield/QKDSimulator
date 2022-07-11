@@ -17,7 +17,7 @@ def encodeKey(rawKey, bases):
         encodedKey.append(q)
     return encodedKey
 
-#Bob measures each qubit using the basis
+#Bob measures the qubits sent by Alice
 def measureQubits(encodedKey, bobsBases):
     keyB = []
     for i in range(len(encodedKey)):
@@ -27,12 +27,14 @@ def measureQubits(encodedKey, bobsBases):
         keyB.append(bool(result[1]))
     return keyB
 
+#Alice sends bob their bases so they can discared bits where the basis they chose were different
 def matchKeys(aliceBases, bobsBases, encodedKey, bobsRawKey):
     match = np.logical_not(np.logical_xor(aliceBases, bobsBases))
     keyAlice = [encodedKey[i] for i in range(len(encodedKey)) if match[i]]
     keyBob = [bobsRawKey[i] for i in range(len(bobsRawKey)) if match[i]]
     return keyAlice, keyBob
 
+#Alice chooses random k/2 qubits to check the QBER which will be discared by both Alice and Bob
 def checkKeys(keyAlice, keyBob):
     chosenQubits = []
     secureKeyBob = []
@@ -52,6 +54,7 @@ def checkKeys(keyAlice, keyBob):
             secureKeyBob.append(keyBob[i])
     return qberCheckAlice, qberCheckBob, secureKeyAlice, secureKeyBob
 
+#Perform error correction so they both have the same secure key
 def errorCorrection(secureKeyAlice, secureKeyBob):
     finalSecureKey = []
     for i in range(len(secureKeyAlice)):
@@ -59,15 +62,18 @@ def errorCorrection(secureKeyAlice, secureKeyBob):
             finalSecureKey.append(secureKeyAlice[i])
     return finalSecureKey
 
+#Checks if two states are the same
 def equivalentState(state1, state2):
     return np.array_equal(state1.prob(), state2.prob())
 
+#Gets random bits for the size of key or basis
 def getRandomBits(numberOfBits):
     bits = []
     for i in range(numberOfBits):
         bits.append(random.choice([True, False]))
     return bits
 
+#Calcualte the error rate depedning on the distance
 def calculateErrorRate(distance):
     #Loss due to distance
     errorRate = 0.02 * (distance / 30)
@@ -77,6 +83,7 @@ def calculateErrorRate(distance):
     errorRate += 0.07
     return (errorRate)
 
+#Add noise the the encoded key
 def addNoise(encodedKey, errorRate):
     sentEncodedKey = encodedKey.copy()
     for i in range(len(sentEncodedKey)):
@@ -88,6 +95,7 @@ def addNoise(encodedKey, errorRate):
                 sentEncodedKey[i] = sentEncodedKey[i].u_propagate(qit.sz)
     return sentEncodedKey
 
+#Calcualte QBER
 def calcualteQBER(qberCheckAlice, qberCheckBob):
     wrong = 0
     totalQubits = len(qberCheckAlice)
