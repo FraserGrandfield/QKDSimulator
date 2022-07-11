@@ -26,6 +26,8 @@ def main():
         runBB84()
         runE91()
     analysisQBER()
+    analysisRawKey()
+    analysisSecureKey()
 
 def runBB84():
     for keySize in keySizes:
@@ -48,16 +50,16 @@ def runBB84():
             #Bob measures the qubits sent by Alice
             bobsRawKey = BB84_03.measureQubits(sentEncodedKey, bobsBases)
             #Alice sends bob their bases so they can discared basis they chose differently
-            siftedKeyAlice, siftedKeyBob = BB84_03.matchKeys(aliceBases, bobsBases, alicesEncodedKey, bobsRawKey)
+            siftedRawKeyAlice, siftedRawKeyBob = BB84_03.matchKeys(aliceBases, bobsBases, alicesEncodedKey, bobsRawKey)
             #Alice chooses random k/2 qubits to check the QBER
-            qberCheckAlice, qberCheckBob, secureKeyAlice, secureKeyBob = BB84_03.checkKeys(siftedKeyAlice, siftedKeyBob)
+            qberCheckAlice, qberCheckBob, secureKeyAlice, secureKeyBob = BB84_03.checkKeys(siftedRawKeyAlice, siftedRawKeyBob)
             #Calcualte QBER
             qber = BB84_03.calcualteQBER(qberCheckAlice, qberCheckBob)
             secureKey = BB84_03.errorCorrection(secureKeyAlice, secureKeyBob)
             print("Key size: " + str(keySize) + " Distance: " + str(distance) + " QBER: " + str(qber))
             print("Length: " + str(len(secureKey)))
             qbers.append(qber)
-            rawKeySizes.append(len(bobsRawKey))
+            rawKeySizes.append(len(siftedRawKeyAlice))
             secureKeySizes.append(len(secureKey))
         dictString = "BB84_" + str(keySize)
         helper_03.saveMeasurement(qberDict, qbers, dictString)
@@ -79,7 +81,7 @@ def runE91():
             qber = E91_03.calcualteQBER(checkKeyAliceNoise, checkKeyBob)
             qbers.append(qber)
             secureKey = E91_03.errorCorrection(rawKeyAliceNoise, rawKeyBob)
-            rawKeySizes.append(len(rawKeyAlice) + len(rawKeyBob))
+            rawKeySizes.append(len(rawKeyAlice) + len(checkKeyAlice))
             secureKeySizes.append(len(secureKey))
             print("length of secure key: " + str(len(secureKey)))
         dictString = "E91_" + str(keySize)
@@ -95,7 +97,27 @@ def analysisQBER():
             averageQBERBB84.append(qber / args.runTimes)
         for qber in qberDict["E91_" + str(keySize)]:
             averageQBERE91.append(qber / args.runTimes)
-        helper_03.drawComparisonGraphQBER(distances, averageQBERE91, averageQBERBB84, keySize, "QBER_Comparison")
+        helper_03.drawComparisonGraph(distances, averageQBERE91, averageQBERBB84, keySize, "QBER_Comparison", "Distance (M)", "QBER (%)")
+
+def analysisRawKey():
+    for keySize in keySizes:
+        averageRawBB84 = []
+        averageRawE91 = []
+        for rawKeySize in rawKeySizesDict["BB84_" + str(keySize)]:
+            averageRawBB84.append(rawKeySize / args.runTimes)
+        for rawKeySize in rawKeySizesDict["E91_" + str(keySize)]:
+            averageRawE91.append(rawKeySize / args.runTimes)
+        helper_03.drawComparisonGraph(distances, averageRawE91, averageRawBB84, keySize, "Raw_Key_Size_Comparison", "Distance (M)", "Raw Key Size")
+
+def analysisSecureKey():
+    for keySize in keySizes:
+        averageSecureBB84 = []
+        averageSecureE91 = []
+        for secureKeySize in secureKeySizesDict["BB84_" + str(keySize)]:
+            averageSecureBB84.append(secureKeySize / args.runTimes)
+        for secureKeySize in secureKeySizesDict["E91_" + str(keySize)]:
+            averageSecureE91.append(secureKeySize / args.runTimes)
+        helper_03.drawComparisonGraph(distances, averageSecureE91, averageSecureBB84, keySize, "Secure_Key_Size_Comparison", "Distance (M)", "Secure Key Size")
 
 def createDistances():
     for i in range(20, args.distance, 20):
