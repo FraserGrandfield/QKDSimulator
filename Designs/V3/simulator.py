@@ -1,4 +1,5 @@
 import argparse
+import math
 import BB84_03
 import helper_03
 import E91_03
@@ -26,6 +27,7 @@ def main():
         runBB84()
         runE91()
     analysisQBER()
+    analysisLogQBER()
     analysisRawKey()
     analysisSecureKey()
 
@@ -97,7 +99,17 @@ def analysisQBER():
             averageQBERBB84.append(qber / args.runTimes)
         for qber in qberDict["E91_" + str(keySize)]:
             averageQBERE91.append(qber / args.runTimes)
-        helper_03.drawComparisonGraph(distances, averageQBERE91, averageQBERBB84, keySize, "QBER_Comparison", "Distance (M)", "QBER (%)")
+        helper_03.drawComparisonGraph(distances, averageQBERE91, averageQBERBB84, keySize, "QBER_Comparison", "Distance (M)", "Log(QBER) (%)")
+
+def analysisLogQBER():
+    for keySize in keySizes:
+        averageQBERBB84 = []
+        averageQBERE91 = []
+        for qber in qberDict["BB84_" + str(keySize)]:
+            averageQBERBB84.append(math.log(qber / args.runTimes))
+        for qber in qberDict["E91_" + str(keySize)]:
+            averageQBERE91.append(math.log(qber / args.runTimes))
+        helper_03.drawComparisonGraph(distances, averageQBERE91, averageQBERBB84, keySize, "QBER_Log_Comparison", "Distance (M)", "QBER (%)")
 
 def analysisRawKey():
     for keySize in keySizes:
