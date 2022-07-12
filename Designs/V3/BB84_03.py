@@ -9,11 +9,8 @@ def encodeKey(rawKey, bases):
         q = qit.state.State('0')
         if rawKey[i]:
             q = q.u_propagate(qit.sx)
-            
         if bases[i]:
-
             q = q.u_propagate(qit.H)
-            print(q)
         encodedKey.append(q)
     return encodedKey
 
@@ -50,7 +47,7 @@ def checkKeys(keyAlice, keyBob):
         qberCheckBob.append(keyBob[chosenQubits[i]])
     for i in range(len(keyAlice)):
         if i not in chosenQubits:
-            secureKeyAlice.append(bool(keyAlice[i].measure()))
+            secureKeyAlice.append(bool(keyAlice[i].measure()[1]))
             secureKeyBob.append(keyBob[i])
     return qberCheckAlice, qberCheckBob, secureKeyAlice, secureKeyBob
 

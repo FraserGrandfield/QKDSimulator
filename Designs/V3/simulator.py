@@ -131,7 +131,7 @@ def analysisQBER():
             averageQBERBB84.append(qber / args.runTimes)
         for qber in qberDict["E91_" + str(keySize)]:
             averageQBERE91.append(qber / args.runTimes)
-        helper_03.drawComparisonGraph(distances, averageQBERE91, averageQBERBB84, keySize, "QBER_Comparison", "Distance (M)", "Log(QBER) (%)")
+        helper_03.drawComparisonGraph(distances, averageQBERE91, averageQBERBB84, keySize, "QBER_Comparison", "Distance (M)", "QBER (%)")
 
 #Create the graph comparing Log of QBER
 def analysisLogQBER():
@@ -142,7 +142,7 @@ def analysisLogQBER():
             averageQBERBB84.append(math.log(qber / args.runTimes))
         for qber in qberDict["E91_" + str(keySize)]:
             averageQBERE91.append(math.log(qber / args.runTimes))
-        helper_03.drawComparisonGraph(distances, averageQBERE91, averageQBERBB84, keySize, "QBER_Log_Comparison", "Distance (M)", "QBER (%)")
+        helper_03.drawComparisonGraph(distances, averageQBERE91, averageQBERBB84, keySize, "QBER_Log_Comparison", "Distance (M)", "Log(QBER) (%)")
 
 #Create the graph comparing the raw key sizes
 def analysisRawKey():
