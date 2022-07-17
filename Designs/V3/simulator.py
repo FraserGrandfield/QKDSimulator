@@ -139,9 +139,9 @@ def analysisLogQBER():
         averageQBERBB84 = []
         averageQBERE91 = []
         for qber in qberDict["BB84_" + str(keySize)]:
-            averageQBERBB84.append(math.log(qber / args.runTimes))
+            averageQBERBB84.append(math.log10(qber / args.runTimes))
         for qber in qberDict["E91_" + str(keySize)]:
-            averageQBERE91.append(math.log(qber / args.runTimes))
+            averageQBERE91.append(math.log10(qber / args.runTimes))
         helper_03.drawComparisonGraph(distances, averageQBERE91, averageQBERBB84, keySize, "QBER_Log_Comparison", "Distance (M)", "Log(QBER) (%)")
         helper_03.createCSV(distances, averageQBERE91, averageQBERBB84, keySize, "QBER_Log_Comparison")
 
