@@ -9,12 +9,7 @@ import math
 import matplotlib.pyplot as plt
 import csv
 
-def drawGraph(x, y, keySize, type):
-    plt.clf()
-    plt.plot(x, y)
-    plt.grid(True)
-    plt.savefig(type + str(keySize) + ".png")
-
+#Draw a graph comparing meausrments from both protocols
 def drawComparisonGraph(distances, e91Measurements, bb84Measurements, keySize, type, xAxis, yAxis):
     plt.clf()
     plt.plot(distances, e91Measurements, label="E91")
@@ -25,6 +20,7 @@ def drawComparisonGraph(distances, e91Measurements, bb84Measurements, keySize, t
     plt.legend()
     plt.savefig(type + str(keySize) + ".png")
 
+#Save a measurement
 def saveMeasurement(dic, measurments, key):
     if key in dic.keys():
         for i in range(len(measurments)):
@@ -34,13 +30,20 @@ def saveMeasurement(dic, measurments, key):
         for i in range(len(measurments)): 
             dic[key].append(measurments[i])
 
+#Calculate what percentage to step up the status of how much progress the simulator has completed
 def calcualateStatusStep(noOfKeys, noOfRunTimes):
     total = noOfKeys * noOfRunTimes * 2
     return (100 / total)
 
+#Create a csv file to display the measurement values
 def createCSV(distances, e91Measurements, bb84Measurements, keySize, type):
-    with open(type + str(keySize) + ".csv", 'w') as file:
+    header = ["distance", "BB84", "E91"]
+    with open(type + str(keySize) + ".csv", 'w', newline='') as file:
         writer = csv.writer(file)
-        writer.writerow(distances)
-        writer.writerow(e91Measurements)
-        writer.writerow(bb84Measurements)
+        writer.writerow(header)
+        for i in range(len(distances)):
+            row = []
+            row.append(distances[i])
+            row.append(bb84Measurements[i])
+            row.append(e91Measurements[i])
+            writer.writerow(row)
