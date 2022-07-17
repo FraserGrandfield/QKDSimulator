@@ -36,12 +36,9 @@ def measure(aliceRotations, bobRotations, aliceChoices, bobChoices):
     for i in range(len(aliceRotations)):
         collapsedState = qit.state.State('bell3')
         aliceP, aliceRes, collapsedState = collapsedState.u_propagate(aliceRotations[i]).measure((0,), do = 'C')
-
         if (aliceChoices[i] == 1 & bobChoices[i] == 0) | (aliceChoices[i] == 2 & bobChoices[i] == 2):
             secureKeyAliceTemp.append(aliceRes)
-
         bobP, bobRes, finalState = collapsedState.u_propagate(bobRotations[i]).measure((1,), do = 'C')
-        
         if (aliceChoices[i] == 1 & bobChoices[i] == 0) | (aliceChoices[i] == 2 & bobChoices[i] == 2):
             secureKeyBobTemp.append(bobRes)
     chosenIndex = []

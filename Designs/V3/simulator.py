@@ -20,7 +20,6 @@ def main():
     statusStep = 0
     #Argument parser that takes the distances, keysizes and how many times to run the simulator
     parser = argparse.ArgumentParser(description="QKD simulator")
-    parser.add_argument("-v", "--verbose", help="Print verbose", action="store_true")
     parser.add_argument("-d", "--distance", help="Max distance to inciment up too", type=int, default=1500)
     parser.add_argument("-ks", "--keySizes", help="Space seperated list of key sizes to simulate", nargs="+", type=int, default=[128, 256])
     parser.add_argument("-rt", "--runTimes", help="How many times to run the simulator to get an average", type=int, default=1)
@@ -132,6 +131,7 @@ def analysisQBER():
         for qber in qberDict["E91_" + str(keySize)]:
             averageQBERE91.append(qber / args.runTimes)
         helper_03.drawComparisonGraph(distances, averageQBERE91, averageQBERBB84, keySize, "QBER_Comparison", "Distance (M)", "QBER (%)")
+        helper_03.createCSV(distances, averageQBERE91, averageQBERBB84, keySize, "QBER_Comparison")
 
 #Create the graph comparing Log of QBER
 def analysisLogQBER():
@@ -143,6 +143,7 @@ def analysisLogQBER():
         for qber in qberDict["E91_" + str(keySize)]:
             averageQBERE91.append(math.log(qber / args.runTimes))
         helper_03.drawComparisonGraph(distances, averageQBERE91, averageQBERBB84, keySize, "QBER_Log_Comparison", "Distance (M)", "Log(QBER) (%)")
+        helper_03.createCSV(distances, averageQBERE91, averageQBERBB84, keySize, "QBER_Log_Comparison")
 
 #Create the graph comparing the raw key sizes
 def analysisRawKey():
@@ -154,6 +155,7 @@ def analysisRawKey():
         for rawKeySize in rawKeySizesDict["E91_" + str(keySize)]:
             averageRawE91.append(rawKeySize / args.runTimes)
         helper_03.drawComparisonGraph(distances, averageRawE91, averageRawBB84, keySize, "Raw_Key_Size_Comparison", "Distance (M)", "Raw Key Size")
+        helper_03.createCSV(distances, averageRawE91, averageRawBB84, keySize, "Raw_Key_Size_Comparison")
 
 #Create the graph comparing secure key sizes
 def analysisSecureKey():
@@ -165,6 +167,7 @@ def analysisSecureKey():
         for secureKeySize in secureKeySizesDict["E91_" + str(keySize)]:
             averageSecureE91.append(secureKeySize / args.runTimes)
         helper_03.drawComparisonGraph(distances, averageSecureE91, averageSecureBB84, keySize, "Secure_Key_Size_Comparison", "Distance (M)", "Secure Key Size")
+        helper_03.createCSV(distances, averageSecureE91, averageSecureBB84, keySize, "Secure_Key_Size_Comparison")
 
 #create the array of distances from args
 def createDistances():

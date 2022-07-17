@@ -7,6 +7,7 @@ import qit
 from Crypto.Random import random
 import math
 import matplotlib.pyplot as plt
+import csv
 
 def drawGraph(x, y, keySize, type):
     plt.clf()
@@ -36,3 +37,10 @@ def saveMeasurement(dic, measurments, key):
 def calcualateStatusStep(noOfKeys, noOfRunTimes):
     total = noOfKeys * noOfRunTimes * 2
     return (100 / total)
+
+def createCSV(distances, e91Measurements, bb84Measurements, keySize, type):
+    with open(type + str(keySize) + ".csv", 'w') as file:
+        writer = csv.writer(file)
+        writer.writerow(distances)
+        writer.writerow(e91Measurements)
+        writer.writerow(bb84Measurements)
