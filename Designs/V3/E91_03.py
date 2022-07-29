@@ -69,17 +69,24 @@ def calcualteQBER(secureAliceKey, secureBobKey):
         if secureAliceKey[i] == secureBobKey[i]:
             wrong += 1
     if len(secureAliceKey) > 0:
-        return((wrong / len(secureAliceKey)) * 100)
+        return(wrong / len(secureAliceKey))
     return(0)
 
 #Calcualte the error rate depedning on the distance
 def calculateErrorRate(distance):
     #Loss due to distance
-    errorRate = 0.02 * (distance / 30)
+    powerIn = 0.2
+    k = (1 - (10**(-0.21/10))) * powerIn
+    k = k / powerIn
+    errorRate = k * distance
     #Loss due to connectors
-    errorRate += 0.11 * 2
+    k2 = (1 - (10**(-0.3/10))) * powerIn
+    k2 = k2 / powerIn
+    errorRate += k2 * 2
     #Loss due to dark count
-    errorRate += 0.30
+    #https://www.science.org/doi/10.1126/sciadv.1500793
+    errorRate += 0.00005
+    print(errorRate)
     return (errorRate)
 
 #Simulate adding noise to keys

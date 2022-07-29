@@ -1,6 +1,7 @@
 import numpy as np
 import qit
 from Crypto.Random import random
+import copy
 
 #Alice prepaing qubits
 def encodeKey(rawKey, bases):
@@ -22,6 +23,12 @@ def measureQubits(encodedKey, bobsBases):
             encodedKey[i] = encodedKey[i].u_propagate(qit.H)
         result = encodedKey[i].measure()
         keyB.append(bool(result[1]))
+    # p = []
+    # for m in encodedKey:
+    #     p.append(m.measure()[1])
+    # print(p)
+    # print(bobsBases)
+    # print(keyB)
     return keyB
 
 #Alice sends bob their bases so they can discared bits where the basis they chose were different
@@ -72,17 +79,24 @@ def getRandomBits(numberOfBits):
 
 #Calcualte the error rate depedning on the distance
 def calculateErrorRate(distance):
-    #Loss due to distance
-    errorRate = 0.02 * (distance / 30)
+    #Channel loss due to distance
+    #https://www.lasercalculator.com/gain-loss-calculator/
+    #https://www.fields.utoronto.ca/programs/scientific/04-05/quantumIC/abstracts/lo.pdf
+    powerIn = 0.2
+    k = (1 - (10**(-0.21/10))) * powerIn
+    k = k / powerIn
+    errorRate = k * distance
     #Loss due to connectors
-    errorRate += 0.11 * 2
+    k2 = (1 - (10**(-0.3/10))) * powerIn
+    k2 = k2 / powerIn
+    errorRate += k2 * 2
     #Loss due to dark count
-    errorRate += 0.07
-    return (errorRate)
+    errorRate += 0.000000085
+    return (0)
 
 #Add noise the the encoded key
 def addNoise(encodedKey, errorRate):
-    sentEncodedKey = encodedKey.copy()
+    sentEncodedKey = copy.deepcopy(encodedKey)
     for i in range(len(sentEncodedKey)):
         p = np.random.random_sample()
         if p < errorRate:
@@ -101,4 +115,4 @@ def calcualteQBER(qberCheckAlice, qberCheckBob):
     for i in range(totalQubits):
         if not bool(qberCheckAlice[i].measure()[1]) == qberCheckBob[i]:
             wrong += 1
-    return ((wrong / totalQubits) * 100)
+    return (wrong / totalQubits)
