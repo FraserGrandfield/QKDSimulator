@@ -90,9 +90,14 @@ def calculateErrorRate(distance):
     k2 = (1 - (10**(-0.3/10))) * powerIn
     k2 = k2 / powerIn
     errorRate += k2 * 2
+    #Splice loss ever 3km
+    if distance % 3 == 0:
+        k3 = (1 - (10**(-0.03/10))) * powerIn
+        k3 = k3 / powerIn
+        errorRate += k3
     #Loss due to dark count
     errorRate += 0.000000085
-    return (0)
+    return (errorRate)
 
 #Add noise the the encoded key
 def addNoise(encodedKey, errorRate):

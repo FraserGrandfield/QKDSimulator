@@ -86,7 +86,6 @@ def calculateErrorRate(distance):
     #Loss due to dark count
     #https://www.science.org/doi/10.1126/sciadv.1500793
     errorRate += 0.00005
-    print(errorRate)
     return (errorRate)
 
 #Simulate adding noise to keys
