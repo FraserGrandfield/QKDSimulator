@@ -19,7 +19,7 @@ def chooseBasis(keySize):
         bobBasis.append(choicesBob[bobChoices[i]])
     return aliceBasis, bobBasis, aliceChoices, bobChoices
 
-#Alice prepares their basis
+#Prepare basis
 def prepareBasis(basis):
     identityOp = array([[1,0],[0,1]])
     rotations = []
@@ -41,25 +41,17 @@ def measure(aliceRotations, bobRotations, aliceChoices, bobChoices):
         bobP, bobRes, finalState = collapsedState.u_propagate(bobRotations[i]).measure((1,), do = 'C')
         if (aliceChoices[i] == 1 & bobChoices[i] == 0) | (aliceChoices[i] == 2 & bobChoices[i] == 2):
             secureKeyBobTemp.append(bobRes)
-    chosenIndex = []
     secureKeyAlice = []
     secureKeyBob = []
     checkKeyAlice = []
     checkKeybob = []
-    while len(chosenIndex) < len(secureKeyAliceTemp) / 2:
-        if len(secureKeyAliceTemp) > 1:
-            qubit = random.randint(0, len(secureKeyAliceTemp) - 1)
-            if qubit not in chosenIndex:
-                chosenIndex.append(qubit)
-        else:
-            chosenIndex.append(0)
-    for i in range(len(chosenIndex)):
-        checkKeyAlice.append(secureKeyAliceTemp[chosenIndex[i]])
-        checkKeybob.append(secureKeyBobTemp[chosenIndex[i]])
     for i in range(len(secureKeyAliceTemp)):
-        if i not in chosenIndex:
+        if i % 2==0:
             secureKeyAlice.append(secureKeyAliceTemp[i])
             secureKeyBob.append(secureKeyBobTemp[i])
+        else:
+            checkKeyAlice.append(secureKeyAliceTemp[i])
+            checkKeybob.append(secureKeyBobTemp[i])
     return secureKeyAlice, secureKeyBob, checkKeyAlice, checkKeybob
 
 #Calculate QBER
@@ -83,6 +75,14 @@ def calculateErrorRate(distance):
     k2 = (1 - (10**(-0.3/10))) * powerIn
     k2 = k2 / powerIn
     errorRate += k2 * 2
+    #Splice loss ever 4km
+    if distance % 4 == 0:
+        k3 = (1 - (10**(-0.03/10))) * powerIn
+        k3 = k3 / powerIn
+        errorRate += k3
+    #Loss due to dark count
+    errorRate += 0.000000085
+    return (errorRate)
     #Loss due to dark count
     #https://www.science.org/doi/10.1126/sciadv.1500793
     errorRate += 0.00005

@@ -1,6 +1,6 @@
 import numpy as np
 import qit
-from Crypto.Random import random
+import random
 import copy
 
 #Alice prepaing qubits
@@ -23,12 +23,6 @@ def measureQubits(encodedKey, bobsBases):
             encodedKey[i] = encodedKey[i].u_propagate(qit.H)
         result = encodedKey[i].measure()
         keyB.append(bool(result[1]))
-    # p = []
-    # for m in encodedKey:
-    #     p.append(m.measure()[1])
-    # print(p)
-    # print(bobsBases)
-    # print(keyB)
     return keyB
 
 #Alice sends bob their bases so they can discared bits where the basis they chose were different
@@ -40,22 +34,17 @@ def matchKeys(aliceBases, bobsBases, encodedKey, bobsRawKey):
 
 #Alice chooses random k/2 qubits to check the QBER which will be discared by both Alice and Bob
 def checkKeys(keyAlice, keyBob):
-    chosenQubits = []
     secureKeyBob = []
     secureKeyAlice = []
-    while len(chosenQubits) < len(keyAlice) / 2:
-        qubit = random.randint(0, len(keyAlice) - 1)
-        if qubit not in chosenQubits:
-            chosenQubits.append(qubit)
     qberCheckAlice = []
     qberCheckBob = []
-    for i in range(len(chosenQubits)):
-        qberCheckAlice.append(keyAlice[chosenQubits[i]])
-        qberCheckBob.append(keyBob[chosenQubits[i]])
     for i in range(len(keyAlice)):
-        if i not in chosenQubits:
-            secureKeyAlice.append(bool(keyAlice[i].measure()[1]))
+        if i % 2==0:
+            secureKeyAlice.append(keyAlice[i])
             secureKeyBob.append(keyBob[i])
+        else:
+            qberCheckAlice.append(keyAlice[i])
+            qberCheckBob.append(keyBob[i])
     return qberCheckAlice, qberCheckBob, secureKeyAlice, secureKeyBob
 
 #Perform error correction so they both have the same secure key
@@ -90,8 +79,8 @@ def calculateErrorRate(distance):
     k2 = (1 - (10**(-0.3/10))) * powerIn
     k2 = k2 / powerIn
     errorRate += k2 * 2
-    #Splice loss ever 3km
-    if distance % 3 == 0:
+    #Splice loss ever 4km
+    if distance % 4 == 0:
         k3 = (1 - (10**(-0.03/10))) * powerIn
         k3 = k3 / powerIn
         errorRate += k3
@@ -118,6 +107,6 @@ def calcualteQBER(qberCheckAlice, qberCheckBob):
     if totalQubits < 1:
         return 0
     for i in range(totalQubits):
-        if not bool(qberCheckAlice[i].measure()[1]) == qberCheckBob[i]:
+        if not bool(qberCheckAlice[i]) == qberCheckBob[i]:
             wrong += 1
     return (wrong / totalQubits)

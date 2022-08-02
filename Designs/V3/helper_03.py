@@ -4,7 +4,6 @@ from sre_parse import State
 from turtle import color
 import numpy as np
 import qit
-from Crypto.Random import random
 import math
 import matplotlib.pyplot as plt
 import csv

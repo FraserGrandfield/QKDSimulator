@@ -20,7 +20,7 @@ def main():
     statusStep = 0
     #Argument parser that takes the distances, keysizes and how many times to run the simulator
     parser = argparse.ArgumentParser(description="QKD simulator")
-    parser.add_argument("-d", "--distance", help="Max distance to inciment up too", type=int, default=200)
+    parser.add_argument("-d", "--distance", help="Max distance to inciment up too", type=int, default=100)
     parser.add_argument("-ks", "--keySizes", help="Space seperated list of key sizes to simulate", nargs="+", type=int, default=[128, 256])
     parser.add_argument("-rt", "--runTimes", help="How many times to run the simulator to get an average", type=int, default=1)
     global args
@@ -53,17 +53,16 @@ def runBB84(status, statusStep):
             aliceBases = BB84_03.getRandomBits(keySize)
             #Alice preparing qubits
             alicesEncodedKey = BB84_03.encodeKey(alicesRawKey, aliceBases)
-            alicesSentEncodedKey = BB84_03.encodeKey(alicesRawKey, aliceBases)
             #Calcualte the error rate depedning on the distance
             errorRate = BB84_03.calculateErrorRate(distance)
             #Add noise the the encoded key
-            sentEncodedKey = BB84_03.addNoise(alicesSentEncodedKey, errorRate)
+            sentEncodedKey = BB84_03.addNoise(alicesEncodedKey, errorRate)
             #Bob randomly chooses which basis to use
             bobsBases = BB84_03.getRandomBits(keySize)
             #Bob measures the qubits sent by Alice
             bobsRawKey = BB84_03.measureQubits(sentEncodedKey, bobsBases)
             #Alice sends bob their bases so they can discared bits where the basis they chose were different
-            siftedRawKeyAlice, siftedRawKeyBob = BB84_03.matchKeys(aliceBases, bobsBases, alicesEncodedKey, bobsRawKey)
+            siftedRawKeyAlice, siftedRawKeyBob = BB84_03.matchKeys(aliceBases, bobsBases, alicesRawKey, bobsRawKey)
             #Alice chooses random k/2 qubits to check the QBER which will be discared by both Alice and Bob
             qberCheckAlice, qberCheckBob, secureKeyAlice, secureKeyBob = BB84_03.checkKeys(siftedRawKeyAlice, siftedRawKeyBob)
             #Calcualte QBER
