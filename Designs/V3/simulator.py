@@ -3,7 +3,7 @@ import math
 import BB84_03
 import helper_03
 import E91_03
-
+import sys
 #Store the key sizes to simulate
 keySizes = []
 #Store the distances to simulate
@@ -24,8 +24,15 @@ def main():
     parser.add_argument("-ks", "--keySizes", help="Space seperated list of key sizes to simulate", nargs="+", type=int, default=[128, 256])
     parser.add_argument("-rt", "--runTimes", help="How many times to run the simulator to get an average", type=int, default=1)
     global args
+    #Check if arguments inputed are valid
     args = parser.parse_args()
-    
+    if args.runTimes < 1:
+        parser.error("Error: runTimes must be greater than 0.")
+    if args.distance < 1:
+        parser.error("Error: distance must be greater than 0.")
+    for arg in args.keySizes:
+        if arg < 1:
+            parser.error("Error: runTimes must be greater than 0.")     
     createDistances()
     addKeys()
     statusStep = helper_03.calcualateStatusStep(len(keySizes), args.runTimes)
