@@ -81,9 +81,6 @@ def calculateErrorRate(distance):
         k3 = k3 / powerIn
         errorRate += k3
     #Loss due to dark count
-    errorRate += 0.000000085
-    return (errorRate)
-    #Loss due to dark count
     #https://www.science.org/doi/10.1126/sciadv.1500793
     errorRate += 0.00005
     return (errorRate)
