@@ -4,6 +4,7 @@ import random
 import copy
 
 #Alice prepaing qubits
+#Propagate the state a finite step in time using a propagator which is either a unitary Hilbert space or Liouville space propagator.
 def encodeKey(rawKey, bases):
     encodedKey = []
     for i in range(len(rawKey)):
@@ -32,14 +33,14 @@ def matchKeys(aliceBases, bobsBases, encodedKey, bobsRawKey):
     keyBob = [bobsRawKey[i] for i in range(len(bobsRawKey)) if match[i]]
     return keyAlice, keyBob
 
-#Alice chooses random k/2 qubits to check the QBER which will be discared by both Alice and Bob
+#Alice and Bob decided to use every other bit to be used to calcualte the QBER.
 def checkKeys(keyAlice, keyBob):
     secureKeyBob = []
     secureKeyAlice = []
     qberCheckAlice = []
     qberCheckBob = []
     for i in range(len(keyAlice)):
-        if i % 2==0:
+        if i % 2 == 0:
             secureKeyAlice.append(keyAlice[i])
             secureKeyBob.append(keyBob[i])
         else:
@@ -68,24 +69,20 @@ def getRandomBits(numberOfBits):
 
 #Calcualte the error rate depedning on the distance
 def calculateErrorRate(distance):
-    #Channel loss due to distance
-    #https://www.lasercalculator.com/gain-loss-calculator/
-    #https://www.fields.utoronto.ca/programs/scientific/04-05/quantumIC/abstracts/lo.pdf
-    powerIn = 0.2
-    k = (1 - (10**(-0.21/10))) * powerIn
-    k = k / powerIn
-    errorRate = k * distance
-    #Loss due to connectors
-    k2 = (1 - (10**(-0.3/10))) * powerIn
-    k2 = k2 / powerIn
-    errorRate += k2 * 2
-    #Splice loss ever 4km
-    if distance % 4 == 0:
-        k3 = (1 - (10**(-0.03/10))) * powerIn
-        k3 = k3 / powerIn
-        errorRate += k3
-    #Loss due to dark count
-    errorRate += 0.000000085
+    #https://www.researchgate.net/figure/a-QBER-as-a-function-of-the-fiber-length-and-mutual-information-between-Alice-and-Bob_fig4_260669325
+    #Number of photons per pulse
+    u = 0.1
+    #Fiber losses [dB/km]
+    a = 0.21
+    #Quantum efficiency of the single-photon detectors
+    n = 0.07
+    #Dark count probability
+    pDark = 0.000005
+    #Visability
+    v = 0.98
+    tlink = 10**((-a*distance)/10)
+    popt = (1 - v) / 2
+    errorRate = popt + (pDark / (2 * tlink * n * u))
     return (errorRate)
 
 #Add noise the the encoded key
@@ -109,4 +106,4 @@ def calcualteQBER(qberCheckAlice, qberCheckBob):
     for i in range(totalQubits):
         if not bool(qberCheckAlice[i]) == qberCheckBob[i]:
             wrong += 1
-    return (wrong / totalQubits)
+    return ((wrong / totalQubits) * 100)
