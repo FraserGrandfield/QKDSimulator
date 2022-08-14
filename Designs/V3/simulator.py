@@ -3,7 +3,7 @@ import math
 import BB84_03
 import helper_03
 import E91_03
-import sys
+
 #Store the key sizes to simulate
 keySizes = []
 #Store the distances to simulate
@@ -76,8 +76,6 @@ def runBB84(status, statusStep):
             qber = BB84_03.calcualteQBER(qberCheckAlice, qberCheckBob)
             #Perform error correction so they both have the same secure key
             secureKey = BB84_03.errorCorrection(secureKeyAlice, secureKeyBob)
-            #print("Key size: " + str(keySize) + " Distance: " + str(distance) + " QBER: " + str(qber))
-            #print("Length: " + str(len(secureKey)))
             #Save the measurements for the distance
             qbers.append(qber)
             rawKeySizes.append(len(siftedRawKeyAlice))
