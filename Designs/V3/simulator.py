@@ -42,7 +42,6 @@ def main():
         status = runE91(status, statusStep)
     #Create graphs from results
     analysisQBER()
-    analysisLogQBER()
     analysisRawKey()
     analysisSecureKey()
     print("Simulation complete")
@@ -131,30 +130,17 @@ def analysisQBER():
     for keySize in keySizes:
         averageQBERBB84 = []
         averageQBERE91 = []
+        averageQBERBB84Log = []
+        averageQBERE91Log = []
         for qber in qberDict["BB84_" + str(keySize)]:
             averageQBERBB84.append(qber / args.runTimes)
+            averageQBERBB84Log.append((qber / args.runTimes) / 100)
         for qber in qberDict["E91_" + str(keySize)]:
             averageQBERE91.append(qber / args.runTimes)
+            averageQBERE91Log.append((qber / args.runTimes) / 100)
         helper_03.drawComparisonGraph(distances, averageQBERE91, averageQBERBB84, keySize, "QBER_Comparison", "Distance (Km)", "QBER (%)")
+        helper_03.drawComparisonGraphSemilogy(distances, averageQBERE91Log, averageQBERBB84Log, keySize, "QBER_Log_Comparison", "Distance (Km)", "QBER")
         helper_03.createCSV(distances, averageQBERE91, averageQBERBB84, keySize, "QBER_Comparison")
-
-#Create the graph comparing Log of QBER
-def analysisLogQBER():
-    for keySize in keySizes:
-        averageQBERBB84 = []
-        averageQBERE91 = []
-        for qber in qberDict["BB84_" + str(keySize)]:
-            if qber > 0:
-                averageQBERBB84.append(math.log10(qber / args.runTimes))
-            else:
-                averageQBERBB84.append(0)
-        for qber in qberDict["E91_" + str(keySize)]:
-            if qber > 0:
-                averageQBERE91.append(math.log10(qber / args.runTimes))
-            else:
-                averageQBERE91.append(0)
-        helper_03.drawComparisonGraph(distances, averageQBERE91, averageQBERBB84, keySize, "QBER_Log_Comparison", "Distance (Km)", "Log(QBER) (%)")
-        helper_03.createCSV(distances, averageQBERE91, averageQBERBB84, keySize, "QBER_Log_Comparison")
 
 #Create the graph comparing the raw key sizes
 def analysisRawKey():

@@ -1,10 +1,3 @@
-from email.mime import base
-import importlib
-from sre_parse import State
-from turtle import color
-import numpy as np
-import qit
-import math
 import matplotlib.pyplot as plt
 import csv
 
@@ -17,6 +10,19 @@ def drawComparisonGraph(distances, e91Measurements, bb84Measurements, keySize, t
     plt.ylabel(yAxis)
     plt.grid(True)
     plt.legend()
+    plt.title("Keysize " + str(keySize))
+    plt.savefig(type + str(keySize) + ".png")
+
+#Draw a graph comparing meausrments from both protocols
+def drawComparisonGraphSemilogy(distances, e91Measurements, bb84Measurements, keySize, type, xAxis, yAxis):
+    plt.clf()
+    plt.semilogy(distances, e91Measurements, label="E91")
+    plt.semilogy(distances, bb84Measurements, label="BB84")
+    plt.xlabel(xAxis)
+    plt.ylabel(yAxis)
+    plt.grid(True)
+    plt.legend()
+    plt.title("Keysize " + str(keySize))
     plt.savefig(type + str(keySize) + ".png")
 
 #Save a measurement
