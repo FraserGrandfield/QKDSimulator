@@ -1,5 +1,4 @@
 import argparse
-import math
 import BB84_03
 import helper_03
 import E91_03
@@ -85,8 +84,7 @@ def runBB84(status, statusStep):
         helper_03.saveMeasurement(qberDict, qbers, dictString)
         helper_03.saveMeasurement(rawKeySizesDict, rawKeySizes, dictString)
         helper_03.saveMeasurement(secureKeySizesDict, secureKeySizes, dictString)
-        status = status + statusStep
-        print("Status: " + str(int(status)) + "%")
+        status = helper_03.printStatus(status, statusStep)
     return status
 
 #Run the E91 simulation for each key size
@@ -121,8 +119,7 @@ def runE91(status, statusStep):
         helper_03.saveMeasurement(qberDict, qbers, dictString)
         helper_03.saveMeasurement(rawKeySizesDict, rawKeySizes, dictString)
         helper_03.saveMeasurement(secureKeySizesDict, secureKeySizes, dictString)
-        status = status + statusStep
-        print("Status: " + str(status) + "%")
+        status = helper_03.printStatus(status, statusStep)
     return status
 
 #Create the graph comparing QBER

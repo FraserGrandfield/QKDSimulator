@@ -52,3 +52,9 @@ def createCSV(distances, e91Measurements, bb84Measurements, keySize, type):
             row.append(bb84Measurements[i])
             row.append(e91Measurements[i])
             writer.writerow(row)
+
+#Print current status of simulator
+def printStatus(status, statusStep):
+    status = status + statusStep
+    print(f"Status: {status}%")
+    return status
