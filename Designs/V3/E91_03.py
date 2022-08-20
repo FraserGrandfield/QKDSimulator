@@ -32,7 +32,7 @@ def prepareBasis(basis):
         rotations.append(rotation)
     return rotations
 
-#Alice and Bob measure the entangled particles to get their raw key and key to check qber
+#Alice and Bob measure the entangled particles to get their raw key and key to check qber. They also perfrom key sifting.
 def measure(aliceRotations, bobRotations, aliceChoices, bobChoices):
     secureKeyAliceTemp = []
     secureKeyBobTemp = []

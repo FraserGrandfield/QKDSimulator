@@ -9,7 +9,7 @@ keySizes = []
 distances = []
 #Dictionaries to store measurements
 qberDict = {}
-rawKeySizesDict = {}
+siftedKeySizesDict = {}
 secureKeySizesDict = {}
 
 #Main function
@@ -41,7 +41,7 @@ def main():
         status = runE91(status, statusStep)
     #Create graphs from results
     analysisQBER()
-    analysisRawKey()
+    analysisSiftedKey()
     analysisSecureKey()
     print("Simulation complete")
 
@@ -49,7 +49,7 @@ def main():
 def runBB84(status, statusStep):
     for keySize in keySizes:
         qbers = []
-        rawKeySizes = []
+        siftedKeySizes = []
         secureKeySizes = []
         for distance in distances:
             #Alice generates random bits to be encoded
@@ -76,13 +76,13 @@ def runBB84(status, statusStep):
             secureKey = BB84_03.errorCorrection(secureKeyAlice, secureKeyBob)
             #Save the measurements for the distance
             qbers.append(qber)
-            rawKeySizes.append(len(siftedRawKeyAlice))
+            siftedKeySizes.append(len(siftedRawKeyAlice))
             secureKeySizes.append(len(secureKey))
         #Prepeare dictionary key
         dictString = "BB84_" + str(keySize)
         #Save all measurements in a dictonary
         helper_03.saveMeasurement(qberDict, qbers, dictString)
-        helper_03.saveMeasurement(rawKeySizesDict, rawKeySizes, dictString)
+        helper_03.saveMeasurement(siftedKeySizesDict, siftedKeySizes, dictString)
         helper_03.saveMeasurement(secureKeySizesDict, secureKeySizes, dictString)
         status = helper_03.printStatus(status, statusStep)
     return status
@@ -91,7 +91,7 @@ def runBB84(status, statusStep):
 def runE91(status, statusStep):
     for keySize in keySizes:
         qbers = []
-        rawKeySizes = []
+        siftedKeySizes = []
         secureKeySizes = []
         for distance in distances:
             #Alice and bob both randomly choose basis.
@@ -100,24 +100,24 @@ def runE91(status, statusStep):
             aliceRotations = E91_03.prepareBasis(aliceBasis)
             #Bob prepares their basis
             bobRotations = E91_03.prepareBasis(bobBasis)
-            #Alice and Bob measure the entangled particles to get their raw key and key to check qber
-            rawKeyAlice, rawKeyBob, checkKeyAlice, checkKeyBob = E91_03.measure(aliceRotations, bobRotations, aliceChoices, bobChoices)
+            #Alice and Bob measure the entangled particles and siftis their key.
+            siftedKeyAlice, siftedKeyBob, checkKeyAlice, checkKeyBob = E91_03.measure(aliceRotations, bobRotations, aliceChoices, bobChoices)
             #Simulate adding noise to keys
-            rawKeyAliceNoise = E91_03.addNoise(rawKeyAlice, distance)
-            checkKeyAliceNoise = E91_03.addNoise(checkKeyAlice, distance)
+            siftedKeyAliceNoise = E91_03.addNoise(siftedKeyAlice, distance)
+            siftedKeyAliceNoise = E91_03.addNoise(checkKeyAlice, distance)
             #Calculate QBER
-            qber = E91_03.calcualteQBER(checkKeyAliceNoise, checkKeyBob)
+            qber = E91_03.calcualteQBER(siftedKeyAliceNoise, checkKeyBob)
             #Perform error correction so they both have the same secure key
-            secureKey = E91_03.errorCorrection(rawKeyAliceNoise, rawKeyBob)
+            secureKey = E91_03.errorCorrection(siftedKeyAliceNoise, siftedKeyBob)
             #Save the measurements for the distance
             qbers.append(qber)
-            rawKeySizes.append(len(rawKeyAlice) + len(checkKeyAlice))
+            siftedKeySizes.append(len(siftedKeyAlice) + len(checkKeyAlice))
             secureKeySizes.append(len(secureKey))
             #print("length of secure key: " + str(len(secureKey)))
         dictString = "E91_" + str(keySize)
         #Save all measurements in a dictonary
         helper_03.saveMeasurement(qberDict, qbers, dictString)
-        helper_03.saveMeasurement(rawKeySizesDict, rawKeySizes, dictString)
+        helper_03.saveMeasurement(siftedKeySizesDict, siftedKeySizes, dictString)
         helper_03.saveMeasurement(secureKeySizesDict, secureKeySizes, dictString)
         status = helper_03.printStatus(status, statusStep)
     return status
@@ -139,17 +139,17 @@ def analysisQBER():
         helper_03.drawComparisonGraphSemilogy(distances, averageQBERE91Log, averageQBERBB84Log, keySize, "QBER_Log_Comparison", "Distance (Km)", "QBER")
         helper_03.createCSV(distances, averageQBERE91, averageQBERBB84, keySize, "QBER_Comparison")
 
-#Create the graph comparing the raw key sizes
-def analysisRawKey():
+#Create the graph comparing the sifted key sizes
+def analysisSiftedKey():
     for keySize in keySizes:
         averageRawBB84 = []
         averageRawE91 = []
-        for rawKeySize in rawKeySizesDict["BB84_" + str(keySize)]:
+        for rawKeySize in siftedKeySizesDict["BB84_" + str(keySize)]:
             averageRawBB84.append(rawKeySize / args.runTimes)
-        for rawKeySize in rawKeySizesDict["E91_" + str(keySize)]:
+        for rawKeySize in siftedKeySizesDict["E91_" + str(keySize)]:
             averageRawE91.append(rawKeySize / args.runTimes)
-        helper_03.drawComparisonGraph(distances, averageRawE91, averageRawBB84, keySize, "Raw_Key_Size_Comparison", "Distance (Km)", "Raw Key Size (bits)")
-        helper_03.createCSV(distances, averageRawE91, averageRawBB84, keySize, "Raw_Key_Size_Comparison")
+        helper_03.drawComparisonGraph(distances, averageRawE91, averageRawBB84, keySize, "Sifted_Key_Size_Comparison", "Distance (Km)", "Sifted Key Size (bits)")
+        helper_03.createCSV(distances, averageRawE91, averageRawBB84, keySize, "Sifted_Key_Size_Comparison")
 
 #Create the graph comparing secure key sizes
 def analysisSecureKey():

@@ -69,7 +69,6 @@ def getRandomBits(numberOfBits):
 
 #Calcualte the error rate depedning on the distance
 def calculateErrorRate(distance):
-    #https://www.researchgate.net/figure/a-QBER-as-a-function-of-the-fiber-length-and-mutual-information-between-Alice-and-Bob_fig4_260669325
     #Number of photons per pulse
     u = 0.1
     #Fiber losses [dB/km]
