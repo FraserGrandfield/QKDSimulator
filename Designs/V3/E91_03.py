@@ -41,11 +41,11 @@ def measure(aliceRotations, bobRotations, aliceChoices, bobChoices):
         collapsedState = qit.state.State('bell3')
         #Alice measures first of the entagled particles.
         aliceP, aliceRes, collapsedState = collapsedState.u_propagate(aliceRotations[i]).measure((0,), do = 'C')
-        if (aliceChoices[i] == 1 & bobChoices[i] == 0) | (aliceChoices[i] == 2 & bobChoices[i] == 2):
+        if (aliceChoices[i] == 0 & bobChoices[i] == 0) | (aliceChoices[i] == 1 & bobChoices[i] == 1):
             secureKeyAliceTemp.append(aliceRes)
         #Bob measures the second of the entagled particles.
         bobP, bobRes, finalState = collapsedState.u_propagate(bobRotations[i]).measure((1,), do = 'C')
-        if (aliceChoices[i] == 1 & bobChoices[i] == 0) | (aliceChoices[i] == 2 & bobChoices[i] == 2):
+        if (aliceChoices[i] == 0 & bobChoices[i] == 0) | (aliceChoices[i] == 1 & bobChoices[i] == 1):
             secureKeyBobTemp.append(bobRes)
     secureKeyAlice = []
     secureKeyBob = []
@@ -65,27 +65,26 @@ def measure(aliceRotations, bobRotations, aliceChoices, bobChoices):
 def calcualteQBER(secureAliceKey, secureBobKey):
     wrong = 0
     for i in range(len(secureAliceKey)):
+        #Qubits are wrong if they are the same because the measurment resualts are anticorrelated.
         if secureAliceKey[i] == secureBobKey[i]:
             wrong += 1
     if len(secureAliceKey) > 0:
         return((wrong / len(secureAliceKey)) * 100)
     return(0)
 
-#Calcualte the error rate depedning on the distance
+#Calcualte the error rate depedning on the distance.
 def calculateErrorRate(distance):
-    #Number of photons per pulse
-    u = 0.1
-    #Fiber losses [dB/km]
-    a = 0.21
-    #Quantum efficiency of the single-photon detectors
-    n = 0.07
-    #Dark count probability
-    pDark = 0.000005
-    #Visability
-    v = 0.98
-    tlink = 10**((-a*distance)/10)
-    popt = (1 - v) / 2
-    errorRate = popt + (pDark / (2 * tlink * n * u))
+    #Coincidence rate.
+    c0 = 9000
+    #Accidential coincidence rate.
+    a0 = 240
+    #attenuation per kilometer.
+    a = 0.204
+    #Dark count per InGaAs detector.
+    d = 4
+    cl = c0 * 10**((-a * distance) / 10)
+    al = a0 * 10**((-a * distance) / 10)
+    errorRate = (al + d) / ((2 * cl) + (2 * al) + (2 * d))
     return (errorRate)
 
 #Simulate adding noise to keys

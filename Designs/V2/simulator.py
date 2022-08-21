@@ -53,12 +53,17 @@ def runE91():
         qbers = []
         secureKeySizes = []
         for distance in distances:
+            #Alice and Bob choose randomly choose basis used for measuring
             aliceBasis, bobBasis, aliceChoices, bobChoices = E91_02.chooseBasis(keySize)
+            #Alice and Bob prepare their basis
             aliceRotations = E91_02.prepareBasis(aliceBasis)
             bobRotations = E91_02.prepareBasis(bobBasis)
+            #Alice and bob measure the entangled particles
             rawKeyAlice, rawKeyBob, checkKeyAlice, checkKeyBob = E91_02.measure(aliceRotations, bobRotations, aliceChoices, bobChoices)
+            #Simulate noise in the key
             rawKeyAliceNoise = E91_02.addNoiseV2(rawKeyAlice, distance)
             checkKeyAliceNoise = E91_02.addNoiseV2(checkKeyAlice, distance)
+            #Calcualte QBER
             qber = E91_02.calcualteQBER(checkKeyAliceNoise, checkKeyBob)
             qbers.append(qber)
             secureKey = E91_02.errorCorrection(rawKeyAliceNoise, rawKeyBob)
