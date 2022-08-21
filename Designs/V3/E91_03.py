@@ -81,10 +81,10 @@ def calculateErrorRate(distance):
     #attenuation per kilometer.
     a = 0.204
     #Dark count per InGaAs detector.
-    d = 4
+    d = 80
     cl = c0 * 10**((-a * distance) / 10)
     al = a0 * 10**((-a * distance) / 10)
-    errorRate = (al + d) / ((2 * cl) + (2 * al) + (2 * d))
+    errorRate = ((al + d) / (((2 * cl) + al) + (al + d)))
     return (errorRate)
 
 #Simulate adding noise to keys

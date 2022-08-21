@@ -104,9 +104,9 @@ def runE91(status, statusStep):
             siftedKeyAlice, siftedKeyBob, checkKeyAlice, checkKeyBob = E91_03.measure(aliceRotations, bobRotations, aliceChoices, bobChoices)
             #Simulate adding noise to keys
             siftedKeyAliceNoise = E91_03.addNoise(siftedKeyAlice, distance)
-            siftedKeyAliceNoise = E91_03.addNoise(checkKeyAlice, distance)
+            siftedKeyAliceNoiseCheck = E91_03.addNoise(checkKeyAlice, distance)
             #Calculate QBER
-            qber = E91_03.calcualteQBER(siftedKeyAliceNoise, checkKeyBob)
+            qber = E91_03.calcualteQBER(siftedKeyAliceNoiseCheck, checkKeyBob)
             #Perform error correction so they both have the same secure key
             secureKey = E91_03.errorCorrection(siftedKeyAliceNoise, siftedKeyBob)
             #Save the measurements for the distance
