@@ -68,11 +68,11 @@ def getRandomBits(numberOfBits):
     return bits
 
 #Calcualte the error rate depedning on the distance
-def calculateErrorRate(distance):
+def calculateErrorRate(distance, fiberloss):
     #Number of photons per pulse
     u = 0.1
     #Fiber losses [dB/km]
-    a = 0.21
+    a = fiberloss
     #Quantum efficiency of the single-photon detectors
     n = 0.07
     #Dark count probability

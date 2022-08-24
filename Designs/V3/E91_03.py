@@ -73,13 +73,13 @@ def calcualteQBER(secureAliceKey, secureBobKey):
     return(0)
 
 #Calcualte the error rate depedning on the distance.
-def calculateErrorRate(distance):
+def calculateErrorRate(distance, fiberLoss):
     #Coincidence rate.
     c0 = 9000
     #Accidential coincidence rate.
     a0 = 240
-    #attenuation per kilometer.
-    a = 0.204
+    #Fiber losses [dB/km]
+    a = fiberLoss
     #Dark count per InGaAs detector.
     d = 80
     cl = c0 * 10**((-a * distance) / 10)
@@ -88,8 +88,7 @@ def calculateErrorRate(distance):
     return (errorRate)
 
 #Simulate adding noise to keys
-def addNoise(key, distance):
-    errorRate = calculateErrorRate(distance)
+def addNoise(key, errorRate):
     keyOut = []
     for qubit in key:
         p = np.random.random_sample()
