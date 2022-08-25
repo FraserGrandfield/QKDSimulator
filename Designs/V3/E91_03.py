@@ -19,13 +19,13 @@ def chooseBasis(keySize):
         bobBasis.append(choicesBob[bobChoices[i]])
     return aliceBasis, bobBasis, aliceChoices, bobChoices
 
-#Prepare basis
+#Prepare basis.
 def prepareBasis(basis):
-    #Identity matix
+    #Identity matix.
     identityOp = array([[1,0],[0,1]])
     rotations = []
     for base in basis:
-        #One-qubit rotation by the angle defined by the base
+        #One-qubit rotation by the angle defined by the base.
         rotation = qit.utils.R_nmr(base, np.pi/2)
         #Calcualates the Kronecker product of two arrays.
         rotation = kron(rotation, identityOp)
@@ -37,7 +37,7 @@ def measure(aliceRotations, bobRotations, aliceChoices, bobChoices):
     secureKeyAliceTemp = []
     secureKeyBobTemp = []
     for i in range(len(aliceRotations)):
-        #Create a pair of entangled particles in Bell state 3
+        #Create a pair of entangled particles in Bell state 3.
         collapsedState = qit.state.State('bell3')
         #Alice measures first of the entagled particles.
         aliceP, aliceRes, collapsedState = collapsedState.u_propagate(aliceRotations[i]).measure((0,), do = 'C')
@@ -61,7 +61,7 @@ def measure(aliceRotations, bobRotations, aliceChoices, bobChoices):
             checkKeybob.append(secureKeyBobTemp[i])
     return secureKeyAlice, secureKeyBob, checkKeyAlice, checkKeybob
 
-#Calculate QBER
+#Calculate QBER.
 def calcualteQBER(secureAliceKey, secureBobKey):
     wrong = 0
     for i in range(len(secureAliceKey)):
@@ -87,7 +87,7 @@ def calculateErrorRate(distance, fiberLoss):
     errorRate = ((al + d) / (((2 * cl) + al) + (al + d)))
     return (errorRate)
 
-#Simulate adding noise to keys
+#Simulate adding noise to keys.
 def addNoise(key, errorRate):
     keyOut = []
     for qubit in key:
@@ -101,7 +101,7 @@ def addNoise(key, errorRate):
             keyOut.append(qubit)
     return keyOut
 
-#Perform error correction so they both have the same secure key
+#Perform error correction so they both have the same secure key.
 def errorCorrection(rawKeyAlice, rawKeyBob):
     secureKey = []
     for i in range(len(rawKeyAlice)):

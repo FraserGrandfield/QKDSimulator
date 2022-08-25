@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import csv
 
-#Draw a graph comparing meausrments from both protocols
+#Draw a graph comparing meausrments from both protocols.
 def drawComparisonGraph(distances, e91Measurements01, bb84Measurements01, e91Measurements02, bb84Measurements02, keySize, type, xAxis, yAxis):
     plt.clf()
     plt.plot(distances, e91Measurements01, label="E91 \u03B1 = 0.2")
@@ -15,7 +15,7 @@ def drawComparisonGraph(distances, e91Measurements01, bb84Measurements01, e91Mea
     plt.title("Keysize " + str(keySize))
     plt.savefig(type + str(keySize) + ".png")
 
-#Draw a graph comparing meausrments from both protocols
+#Draw a graph comparing meausrments from both protocols.
 def drawComparisonGraphSemilogy(distances, e91Measurements01, bb84Measurements01, e91Measurements02, bb84Measurements02, keySize, type, xAxis, yAxis):
     plt.clf()
     plt.semilogy(distances, e91Measurements01, label="E91 \u03B1 = 0.2")
@@ -29,7 +29,7 @@ def drawComparisonGraphSemilogy(distances, e91Measurements01, bb84Measurements01
     plt.title("Keysize " + str(keySize))
     plt.savefig(type + str(keySize) + ".png")
 
-#Save a measurement
+#Save a measurement.
 def saveMeasurement(dic, measurments, key):
     if key in dic.keys():
         for i in range(len(measurments)):
@@ -39,12 +39,12 @@ def saveMeasurement(dic, measurments, key):
         for i in range(len(measurments)): 
             dic[key].append(measurments[i])
 
-#Calculate what percentage to step up the status of how much progress the simulator has completed
+#Calculate what percentage to step up the status of how much progress the simulator has completed.
 def calcualateStatusStep(noOfKeys, noOfRunTimes, noFiberLossParams):
     total = noOfKeys * noOfRunTimes * noFiberLossParams * 2
     return (100 / total)
 
-#Create a csv file to display the measurement values
+#Create a csv file to display the measurement values.
 def createCSV(distances, e91Measurements01, bb84Measurements01, e91Measurements02, bb84Measurements02, keySize, type):
     header = ["distance", "BB8401", "E9101", "BB8402", "E9102"]
     with open(type + str(keySize) + ".csv", 'w', newline='') as file:
@@ -59,7 +59,7 @@ def createCSV(distances, e91Measurements01, bb84Measurements01, e91Measurements0
             row.append(bb84Measurements02[i])
             writer.writerow(row)
 
-#Print current status of simulator
+#Print current status of simulator.
 def printStatus(status, statusStep):
     status = status + statusStep
     print(f"Status: {status}%")

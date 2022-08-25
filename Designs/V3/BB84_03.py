@@ -3,7 +3,7 @@ import qit
 import random
 import copy
 
-#Alice prepaing qubits
+#Alice prepaing qubits.
 #Propagate the state a finite step in time using a propagator which is either a unitary Hilbert space or Liouville space propagator.
 def encodeKey(rawKey, bases):
     encodedKey = []
@@ -16,7 +16,7 @@ def encodeKey(rawKey, bases):
         encodedKey.append(q)
     return encodedKey
 
-#Bob measures the qubits sent by Alice
+#Bob measures the qubits sent by Alice.
 def measureQubits(encodedKey, bobsBases):
     keyB = []
     for i in range(len(encodedKey)):
@@ -26,7 +26,7 @@ def measureQubits(encodedKey, bobsBases):
         keyB.append(bool(result[1]))
     return keyB
 
-#Alice sends bob their bases so they can discared bits where the basis they chose were different
+#Alice sends bob their bases so they can discared bits where the basis they chose were different.
 def matchKeys(aliceBases, bobsBases, encodedKey, bobsRawKey):
     match = np.logical_not(np.logical_xor(aliceBases, bobsBases))
     keyAlice = [encodedKey[i] for i in range(len(encodedKey)) if match[i]]
@@ -48,7 +48,7 @@ def checkKeys(keyAlice, keyBob):
             qberCheckBob.append(keyBob[i])
     return qberCheckAlice, qberCheckBob, secureKeyAlice, secureKeyBob
 
-#Perform error correction so they both have the same secure key
+#Perform error correction so they both have the same secure key.
 def errorCorrection(secureKeyAlice, secureKeyBob):
     finalSecureKey = []
     for i in range(len(secureKeyAlice)):
@@ -56,35 +56,35 @@ def errorCorrection(secureKeyAlice, secureKeyBob):
             finalSecureKey.append(secureKeyAlice[i])
     return finalSecureKey
 
-#Checks if two states are the same
+#Checks if two states are the same.
 def equivalentState(state1, state2):
     return np.array_equal(state1.prob(), state2.prob())
 
-#Gets random bits for the size of key or basis
+#Gets random bits for the size of key or basis.
 def getRandomBits(numberOfBits):
     bits = []
     for i in range(numberOfBits):
         bits.append(random.choice([True, False]))
     return bits
 
-#Calcualte the error rate depedning on the distance
+#Calcualte the error rate depedning on the distance.
 def calculateErrorRate(distance, fiberloss):
-    #Number of photons per pulse
+    #Number of photons per pulse.
     u = 0.1
-    #Fiber losses [dB/km]
+    #Fiber losses [dB/km].
     a = fiberloss
-    #Quantum efficiency of the single-photon detectors
+    #Quantum efficiency of the single-photon detectors.
     n = 0.07
-    #Dark count probability
+    #Dark count probability.
     pDark = 0.000005
-    #Visability
+    #Visability.
     v = 0.98
     tlink = 10**((-a*distance)/10)
     popt = (1 - v) / 2
     errorRate = popt + (pDark / (2 * tlink * n * u))
     return (errorRate)
 
-#Add noise the the encoded key
+#Add noise the the encoded key.
 def addNoise(encodedKey, errorRate):
     sentEncodedKey = copy.deepcopy(encodedKey)
     for i in range(len(sentEncodedKey)):
@@ -96,7 +96,7 @@ def addNoise(encodedKey, errorRate):
                 sentEncodedKey[i] = sentEncodedKey[i].u_propagate(qit.sz)
     return sentEncodedKey
 
-#Calcualte QBER
+#Calcualte QBER.
 def calcualteQBER(qberCheckAlice, qberCheckBob):
     wrong = 0
     totalQubits = len(qberCheckAlice)
