@@ -46,7 +46,7 @@ def calcualateStatusStep(noOfKeys, noOfRunTimes, noFiberLossParams):
 
 #Create a csv file to display the measurement values.
 def createCSV(distances, e91Measurements01, bb84Measurements01, e91Measurements02, bb84Measurements02, keySize, type):
-    header = ["distance", "BB8401", "E9101", "BB8402", "E9102"]
+    header = ["distance", "BB8401", "E9101", "E9102", "BB8402"]
     with open(type + str(keySize) + ".csv", 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(header)
