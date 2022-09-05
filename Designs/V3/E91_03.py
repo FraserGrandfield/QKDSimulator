@@ -32,44 +32,44 @@ def prepareBasis(basis):
         rotations.append(rotation)
     return rotations
 
-#Alice and Bob measure the entangled particles to get their raw key and key to check qber. They also perfrom key sifting.
+#Alice and Bob measure the entangled particles to get their raw key and key to check QBER. They also perform key sifting.
 def measure(aliceRotations, bobRotations, aliceChoices, bobChoices):
-    secureKeyAliceTemp = []
-    secureKeyBobTemp = []
+    siftedKeyAliceTemp = []
+    siftedKeyBobTemp = []
     for i in range(len(aliceRotations)):
         #Create a pair of entangled particles in Bell state 3.
         collapsedState = qit.state.State('bell3')
         #Alice measures first of the entagled particles.
         aliceP, aliceRes, collapsedState = collapsedState.u_propagate(aliceRotations[i]).measure((0,), do = 'C')
         if (aliceChoices[i] == 0 & bobChoices[i] == 0) | (aliceChoices[i] == 1 & bobChoices[i] == 1):
-            secureKeyAliceTemp.append(aliceRes)
+            siftedKeyAliceTemp.append(aliceRes)
         #Bob measures the second of the entagled particles.
         bobP, bobRes, finalState = collapsedState.u_propagate(bobRotations[i]).measure((1,), do = 'C')
         if (aliceChoices[i] == 0 & bobChoices[i] == 0) | (aliceChoices[i] == 1 & bobChoices[i] == 1):
-            secureKeyBobTemp.append(bobRes)
-    secureKeyAlice = []
-    secureKeyBob = []
+            siftedKeyBobTemp.append(bobRes)
+    siftedKeyAlice = []
+    siftedKeyBob = []
     checkKeyAlice = []
     checkKeybob = []
     #Alice and Bob decided to use every other bit to be used to calcualte the QBER.
-    for i in range(len(secureKeyAliceTemp)):
+    for i in range(len(siftedKeyAliceTemp)):
         if i % 2 == 0:
-            secureKeyAlice.append(secureKeyAliceTemp[i])
-            secureKeyBob.append(secureKeyBobTemp[i])
+            siftedKeyAlice.append(siftedKeyAliceTemp[i])
+            siftedKeyBob.append(siftedKeyBobTemp[i])
         else:
-            checkKeyAlice.append(secureKeyAliceTemp[i])
-            checkKeybob.append(secureKeyBobTemp[i])
-    return secureKeyAlice, secureKeyBob, checkKeyAlice, checkKeybob
+            checkKeyAlice.append(siftedKeyAliceTemp[i])
+            checkKeybob.append(siftedKeyBobTemp[i])
+    return siftedKeyAlice, siftedKeyBob, checkKeyAlice, checkKeybob
 
 #Calculate QBER.
-def calcualteQBER(secureAliceKey, secureBobKey):
+def calcualteQBER(siftedAliceKey, siftedBobKey):
     wrong = 0
-    for i in range(len(secureAliceKey)):
+    for i in range(len(siftedAliceKey)):
         #Qubits are wrong if they are the same because the measurment resualts are anticorrelated.
-        if secureAliceKey[i] == secureBobKey[i]:
+        if siftedAliceKey[i] == siftedBobKey[i]:
             wrong += 1
-    if len(secureAliceKey) > 0:
-        return((wrong / len(secureAliceKey)) * 100)
+    if len(siftedAliceKey) > 0:
+        return((wrong / len(siftedAliceKey)) * 100)
     return(0)
 
 #Calcualte the error rate depedning on the distance.
